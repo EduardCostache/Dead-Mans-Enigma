@@ -30,9 +30,8 @@ class _DeadMansEnigmaState extends State<DeadMansEnigma> {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
-      home: Center(
-        child: Text('Hello windows'),
-      ),
+      theme: ThemeData(fontFamily: 'Roboto'),
+      home: HomePage(),
     );
   }
 }

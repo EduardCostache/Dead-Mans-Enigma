@@ -17,70 +17,72 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: const Text(
-              "Dead Man's Enigma",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 44.0,
-                color: Colors.black,
-                fontFamily: 'Roboto',
-              ),
-            ),
+            child: _buildTitle("Dead Man's Enigma", 44.0),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: const Text(
-              'Choose either to encrypt or decrypt you data',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Roboto',
-                  fontSize: 22.0,
-                  color: Colors.grey),
-            ),
+            child: _buildTitle(
+                'Choose to either Encrypt or Decrypt your files.', 22.0),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Button(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Text(
-                        'Encrypt',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: _buttonTextSize,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-                Container(
-                  //height: 30.0,
-                  //width: 50.0,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Button(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Text(
-                        'Decrypt',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: _buttonTextSize,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
+                _encryptButton(),
+                _decryptButton(),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Container _buildTitle(String title, double fontSize) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 18.0),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: fontSize, color: Colors.grey),
+      ),
+    );
+  }
+
+  Container _encryptButton() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Button(
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Text(
+            'Encrypt',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: _buttonTextSize,
+            ),
+          ),
+        ),
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Container _decryptButton() {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Button(
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Text(
+            'Decrypt',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: _buttonTextSize,
+            ),
+          ),
+        ),
+        onPressed: () {},
       ),
     );
   }
