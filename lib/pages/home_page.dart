@@ -1,4 +1,6 @@
+import 'package:dead_mans_enigma/theme/color_palette.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,82 +10,96 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final double _buttonTextSize = 18.0;
+  final double _buttonTextSize = 20.0;
+
+  final double _buttonVerticalPadding = 18.0;
+  final double _buttonHorizontalPadding = 100.0;
+  final double _buttonSeperatorPadding = 40.0;
+
+  final double _rowChildrenPadding = 18.0;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: _buildTitle("Dead Man's Enigma", 44.0),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: _buildTitle(
-                'Choose to either Encrypt or Decrypt your files.', 22.0),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _encryptButton(),
-                _decryptButton(),
-              ],
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
+              child: Text(
+                "Dead Man's Tube",
+                style: TextStyle(
+                    fontSize: 44.0,
+                    color: MyThemeColors.textTitle(),
+                    fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
+              child: Text(
+                "Choose either to Encrypt or Decrypt your files.",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: MyThemeColors.textSubtitle(),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: _buttonSeperatorPadding),
+                    child: _encryptButton(),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: _buttonSeperatorPadding),
+                    child: _decryptButton(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Container _buildTitle(String title, double fontSize) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18.0),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: fontSize, color: Colors.grey),
-      ),
-    );
-  }
-
-  Container _encryptButton() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Button(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Text(
-            'Encrypt',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: _buttonTextSize,
-            ),
+  Button _encryptButton() {
+    return Button(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            vertical: _buttonVerticalPadding,
+            horizontal: _buttonHorizontalPadding),
+        child: Text(
+          'Encrypt',
+          style: TextStyle(
+            color: MyThemeColors.textTitle(),
+            fontSize: _buttonTextSize,
           ),
         ),
-        onPressed: () {},
       ),
+      onPressed: () {},
     );
   }
 
-  Container _decryptButton() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Button(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Text(
-            'Decrypt',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: _buttonTextSize,
-            ),
+  Button _decryptButton() {
+    return Button(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            vertical: _buttonVerticalPadding,
+            horizontal: _buttonHorizontalPadding),
+        child: Text(
+          'Decrypt',
+          style: TextStyle(
+            color: MyThemeColors.textTitle(),
+            fontSize: _buttonTextSize,
           ),
         ),
-        onPressed: () {},
       ),
+      onPressed: () {},
     );
   }
 }

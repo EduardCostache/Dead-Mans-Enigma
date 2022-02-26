@@ -14,9 +14,8 @@ void main() async {
     await windowManager.setTitle("Dead Man's Enigma");
     await windowManager.setResizable(false);
     await windowManager.show();
-    await windowManager.focus();
   });
-  runApp(DeadMansEnigma());
+  runApp(const DeadMansEnigma());
 }
 
 class DeadMansEnigma extends StatefulWidget {
@@ -31,7 +30,7 @@ class _DeadMansEnigmaState extends State<DeadMansEnigma> {
   Widget build(BuildContext context) {
     return FluentApp(
       theme: ThemeData(fontFamily: 'Roboto'),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
