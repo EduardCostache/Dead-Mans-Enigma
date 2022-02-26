@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
               child: Text(
-                "Dead Man's Tube",
+                "Dead Man's Enigma",
                 style: TextStyle(
                     fontSize: 44.0,
                     color: MyThemeColors.textTitle(),
@@ -67,8 +67,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  ButtonStyle _buttonStyle() {
+    return ButtonStyle(
+      backgroundColor: ButtonState.all(Colors.white),
+      border: ButtonState.resolveWith(
+        (states) {
+          if (states.contains(ButtonStates.hovering)) {
+            return BorderSide(width: 2.0, color: MyThemeColors.regularBlue());
+          }
+          return const BorderSide(
+            width: 2.0,
+            color: Color.fromARGB(255, 230, 230, 230),
+          );
+        },
+      ),
+    );
+  }
+
   Button _encryptButton() {
     return Button(
+      style: _buttonStyle(),
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
@@ -87,6 +105,7 @@ class _HomePageState extends State<HomePage> {
 
   Button _decryptButton() {
     return Button(
+      style: _buttonStyle(),
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
