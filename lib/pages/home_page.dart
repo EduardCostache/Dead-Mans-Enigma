@@ -1,6 +1,9 @@
+import 'package:dead_mans_enigma/pages/encryption_page.dart';
+import 'package:dead_mans_enigma/theme/button_style.dart';
 import 'package:dead_mans_enigma/theme/color_palette.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/cupertino.dart';
+
+import 'decryption_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +17,6 @@ class _HomePageState extends State<HomePage> {
 
   final double _buttonVerticalPadding = 18.0;
   final double _buttonHorizontalPadding = 100.0;
-  final double _buttonSeperatorPadding = 40.0;
 
   final double _rowChildrenPadding = 18.0;
 
@@ -25,7 +27,7 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Column(
           children: [
-            Container(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
               child: Text(
                 "Dead Man's Enigma",
@@ -35,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w500),
               ),
             ),
-            Container(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
               child: Text(
                 "Choose either to Encrypt or Decrypt your files.",
@@ -45,19 +47,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Container(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: _rowChildrenPadding),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(right: _buttonSeperatorPadding),
-                    child: _encryptButton(),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: _buttonSeperatorPadding),
-                    child: _decryptButton(),
-                  ),
+                  _encryptButton(),
+                  _decryptButton(),
                 ],
               ),
             ),
@@ -67,26 +63,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ButtonStyle _buttonStyle() {
-    return ButtonStyle(
-      backgroundColor: ButtonState.all(Colors.white),
-      border: ButtonState.resolveWith(
-        (states) {
-          if (states.contains(ButtonStates.hovering)) {
-            return BorderSide(width: 2.0, color: MyThemeColors.regularBlue());
-          }
-          return const BorderSide(
-            width: 2.0,
-            color: Color.fromARGB(255, 230, 230, 230),
-          );
-        },
-      ),
-    );
-  }
-
   Button _encryptButton() {
     return Button(
-      style: _buttonStyle(),
+      style: MyButtonStyles.defaultStyle(),
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
@@ -99,13 +78,16 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context,
+            FluentPageRoute(builder: (context) => const EncryptionPage()));
+      },
     );
   }
 
   Button _decryptButton() {
     return Button(
-      style: _buttonStyle(),
+      style: MyButtonStyles.defaultStyle(),
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
@@ -118,7 +100,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context,
+            FluentPageRoute(builder: (context) => const DecryptionPage()));
+      },
     );
   }
 }
