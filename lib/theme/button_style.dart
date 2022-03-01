@@ -12,7 +12,6 @@ class MyButtonStyles {
           }
           return const BorderSide(
             width: 2.0,
-            //color: Color.fromARGB(255, 230, 230, 230),
             color: Colors.black,
           );
         },

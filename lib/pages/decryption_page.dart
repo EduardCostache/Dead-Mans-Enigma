@@ -33,7 +33,7 @@ class _DecryptionPageState extends State<DecryptionPage> {
                 padding: const EdgeInsets.only(top: 10.0),
                 alignment: Alignment.center,
                 child: Text(
-                  'Encryption',
+                  'Decryption',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 36.0,

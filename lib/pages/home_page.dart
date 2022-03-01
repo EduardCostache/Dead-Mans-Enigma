@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   Button _encryptButton() {
     return Button(
       style: MyButtonStyles.defaultStyle(),
-      child: Container(
+      child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
             horizontal: _buttonHorizontalPadding),
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   Button _decryptButton() {
     return Button(
       style: MyButtonStyles.defaultStyle(),
-      child: Container(
+      child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: _buttonVerticalPadding,
             horizontal: _buttonHorizontalPadding),

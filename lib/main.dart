@@ -13,6 +13,7 @@ void main() async {
     await windowManager.center();
     await windowManager.setTitle("Dead Man's Enigma");
     await windowManager.setResizable(false);
+    await windowManager.focus();
     await windowManager.show();
   });
   runApp(const DeadMansEnigma());
