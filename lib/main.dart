@@ -1,4 +1,4 @@
-import 'package:dead_mans_enigma/pages/home_page.dart';
+import 'package:dead_mans_enigma/pages/main_page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -31,7 +31,7 @@ class _DeadMansEnigmaState extends State<DeadMansEnigma> {
   Widget build(BuildContext context) {
     return FluentApp(
       theme: ThemeData(fontFamily: 'Roboto'),
-      home: const HomePage(),
+      home: const MainPage(),
     );
   }
 }

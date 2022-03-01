@@ -9,14 +9,14 @@ import 'package:file_picker/file_picker.dart';
 
 import '../theme/color_palette.dart';
 
-class EncryptionPage extends StatefulWidget {
-  const EncryptionPage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _EncryptionPageState createState() => _EncryptionPageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _EncryptionPageState extends State<EncryptionPage> {
+class _MainPageState extends State<MainPage> {
   final double _buttonTextSize = 20.0;
   final double _widgetWidth = 200.0;
 
@@ -41,6 +41,9 @@ class _EncryptionPageState extends State<EncryptionPage> {
       child: Column(
         children: [
           _header(),
+          const Expanded(
+            child: SizedBox(),
+          ),
           _buildSubtitle('1. Choose your files'),
           _pickFilesButton(),
           _buildSubtitle('2. Enter your key'),
@@ -69,24 +72,19 @@ class _EncryptionPageState extends State<EncryptionPage> {
     }
   }
 
-  Stack _header() {
-    return Stack(
-      children: [
-        _backButton(),
-        Container(
-          padding: const EdgeInsets.only(top: 10.0),
-          alignment: Alignment.center,
-          child: Text(
-            "Dead Man's Enigma",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 36.0,
-              color: MyThemeColors.textTitle(),
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+  Container _header() {
+    return Container(
+      padding: const EdgeInsets.only(top: 10.0),
+      alignment: Alignment.center,
+      child: Text(
+        "Dead Man's Enigma",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 44.0,
+          color: MyThemeColors.textTitle(),
+          fontWeight: FontWeight.w400,
         ),
-      ],
+      ),
     );
   }
 
@@ -177,37 +175,6 @@ class _EncryptionPageState extends State<EncryptionPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Padding _backButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Button(
-        style: MyButtonStyles.defaultStyle(),
-        child: Container(
-          width: 90.0,
-          padding: const EdgeInsets.all(6.0),
-          child: Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(right: 4.0),
-                child: Icon(FluentIcons.back, size: 22.0),
-              ),
-              Text(
-                'Back',
-                style: TextStyle(
-                  color: MyThemeColors.textTitle(),
-                  fontSize: _buttonTextSize,
-                ),
-              ),
-            ],
-          ),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }
