@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:dead_mans_enigma/functions/encryption_function.dart';
+import 'package:dead_mans_enigma/functions/encrypt_decrypt_functions.dart';
 import 'package:dead_mans_enigma/theme/button_style.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'dart:io';
@@ -20,17 +20,24 @@ class _MainPageState extends State<MainPage> {
   final double _buttonTextSize = 20.0;
   final double _widgetWidth = 200.0;
 
+  final int _keyLength = 32;
+
+  List<File>? _files;
+
   late TextEditingController _textController;
+  late final _flyoutController;
 
   @override
   void initState() {
     super.initState();
     _textController = TextEditingController();
+    _flyoutController = FlyoutController();
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _flyoutController.dispose();
     super.dispose();
   }
 
@@ -46,8 +53,42 @@ class _MainPageState extends State<MainPage> {
           ),
           _buildSubtitle('1. Choose your files'),
           _pickFilesButton(),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: _files == null
+                ? Container(
+                    height: 19.0 // 19.0 height so that the layout doesn't shift
+                    )
+                : Text('You have selected ${_files!.length} file(s)',
+                    style: const TextStyle(
+                        fontSize: 16.0, fontStyle: FontStyle.italic)),
+          ),
+          const Expanded(
+            child: SizedBox(),
+          ),
           _buildSubtitle('2. Enter your key'),
-          _keyTextBox(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _keyTextBox(),
+              Flyout(
+                controller: _flyoutController,
+                contentWidth: 450,
+                content: const FlyoutContent(
+                  child: Text(
+                    'Please note that keys must be no LONGER than 32 characters (including spaces). If the key is SHOERTER than 32 characters, the algorithm will fill in the remaining charatcers with empty space.',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                child: IconButton(
+                  icon: const Icon(FluentIcons.info, size: 30.0),
+                  onPressed: () {
+                    _flyoutController.open = true;
+                  },
+                ),
+              ),
+            ],
+          ),
           const Expanded(
             child: SizedBox(),
           ),
@@ -65,10 +106,50 @@ class _MainPageState extends State<MainPage> {
     );
 
     if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      inspect(files);
+      setState(() {
+        _files = result.paths.map((path) => File(path!)).toList();
+      });
     } else {
-      // User canceled the picker
+      setState(() {
+        _files = null;
+      });
+    }
+  }
+
+  bool _validateKeyError(String key) {
+    bool error = false;
+    String errorText = '';
+    if (key.length > _keyLength) {
+      error = true;
+      errorText =
+          'Key must be less than $_keyLength characters, including spaces!';
+    } else if (key.isEmpty) {
+      error = true;
+      errorText = 'Key cannot be empty!';
+    }
+
+    if (error) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ContentDialog(
+            title: const Text('Invalid Key'),
+            content: Text(errorText, style: const TextStyle(fontSize: 16.0)),
+            actions: [
+              const SizedBox(),
+              Button(
+                  style: MyButtonStyles.dialogYes(),
+                  child: const Text('OK', style: TextStyle(fontSize: 16.0)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ],
+          );
+        },
+      );
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -100,7 +181,13 @@ class _MainPageState extends State<MainPage> {
               width: _widgetWidth,
               child: Button(
                 style: MyButtonStyles.defaultStyle(),
-                onPressed: () {},
+                onPressed: () {
+                  String key = _textController.text;
+                  if (!_validateKeyError(key)) {
+                    // TODO: INSERT ENCRYPTION LOGIC
+                    inspect(Enigma().encrypt('HEllo world!', key));
+                  }
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Text(
@@ -120,7 +207,11 @@ class _MainPageState extends State<MainPage> {
               width: _widgetWidth,
               child: Button(
                 style: MyButtonStyles.defaultStyle(),
-                onPressed: () {},
+                onPressed: () {
+                  if (!_validateKeyError(_textController.text)) {
+                    // TODO: INSERT DECRYPTION LOGIC
+                  }
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Text(
@@ -156,7 +247,7 @@ class _MainPageState extends State<MainPage> {
 
   Padding _pickFilesButton() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 64.0),
+      padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         width: _widgetWidth,
         child: Button(
@@ -183,8 +274,14 @@ class _MainPageState extends State<MainPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SizedBox(
-        width: _widgetWidth,
+        width: _widgetWidth * 2,
         child: TextBox(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2.0,
+              color: MyThemeColors.regularBlue(),
+            ),
+          ),
           controller: _textController,
           style: TextStyle(
             fontSize: 20.0,
