@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dead_mans_enigma/functions/encrypt_decrypt_functions.dart';
 import 'package:dead_mans_enigma/theme/button_style.dart';
+import 'package:dead_mans_enigma/widgets/alert_widgets.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'dart:io';
 
@@ -24,8 +25,8 @@ class _MainPageState extends State<MainPage> {
 
   List<File>? _files;
 
-  late TextEditingController _textController;
-  late final _flyoutController;
+  late final TextEditingController _textController;
+  late final FlyoutController _flyoutController;
 
   @override
   void initState() {
@@ -76,7 +77,7 @@ class _MainPageState extends State<MainPage> {
                 contentWidth: 450,
                 content: const FlyoutContent(
                   child: Text(
-                    'Please note that keys must be no LONGER than 32 characters (including spaces). If the key is SHOERTER than 32 characters, the algorithm will fill in the remaining charatcers with empty space.',
+                    'Please note that keys must be no LONGER than 32 characters (including spaces). If the key is SHORTER than 32 characters, the program will fill in the remaining charatcers with empty spaces.',
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
@@ -117,36 +118,15 @@ class _MainPageState extends State<MainPage> {
   }
 
   bool _validateKeyError(String key) {
-    bool error = false;
-    String errorText = '';
-    if (key.length > _keyLength) {
-      error = true;
-      errorText =
-          'Key must be less than $_keyLength characters, including spaces!';
-    } else if (key.isEmpty) {
-      error = true;
-      errorText = 'Key cannot be empty!';
-    }
-
-    if (error) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return ContentDialog(
-            title: const Text('Invalid Key'),
-            content: Text(errorText, style: const TextStyle(fontSize: 16.0)),
-            actions: [
-              const SizedBox(),
-              Button(
-                  style: MyButtonStyles.dialogYes(),
-                  child: const Text('OK', style: TextStyle(fontSize: 16.0)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        },
-      );
+    // true = error
+    // false = valid
+    if (key.isEmpty) {
+      MyAlertWidgets.showErrorAlert(
+          context, 'Invalid Key', 'Key cannot be empty!');
+      return true;
+    } else if (key.length > _keyLength) {
+      MyAlertWidgets.showErrorAlert(context, 'Invalid Key',
+          'Key must be less than $_keyLength characters, including spaces!');
       return true;
     } else {
       return false;
@@ -183,9 +163,17 @@ class _MainPageState extends State<MainPage> {
                 style: MyButtonStyles.defaultStyle(),
                 onPressed: () {
                   String key = _textController.text;
-                  if (!_validateKeyError(key)) {
-                    // TODO: INSERT ENCRYPTION LOGIC
-                    inspect(Enigma().encrypt('HEllo world!', key));
+
+                  if (_files == null) {
+                    MyAlertWidgets.showErrorAlert(
+                        context,
+                        'Invalid File Selection',
+                        'You must select at least 1 file!');
+                  } else {
+                    if (!_validateKeyError(key)) {
+                      //TODO: ENCRYPTION CODE GOES HERE
+                      Enigma().encrypt('text', 'keyAsString', _files!);
+                    }
                   }
                 },
                 child: Padding(
@@ -208,8 +196,17 @@ class _MainPageState extends State<MainPage> {
               child: Button(
                 style: MyButtonStyles.defaultStyle(),
                 onPressed: () {
-                  if (!_validateKeyError(_textController.text)) {
-                    // TODO: INSERT DECRYPTION LOGIC
+                  String key = _textController.text;
+
+                  if (_files == null) {
+                    MyAlertWidgets.showErrorAlert(
+                        context,
+                        'Invalid File Selection',
+                        'You must select at least 1 file!');
+                  } else {
+                    if (!_validateKeyError(key)) {
+                      //TODO: DECRYPTION CODE GOES HERE
+                    }
                   }
                 },
                 child: Padding(

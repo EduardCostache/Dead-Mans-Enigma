@@ -9,7 +9,6 @@ void main() async {
 
   // Use it only after calling `hiddenWindowAtLaunch`
   windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.setSize(const Size(800, 600));
     await windowManager.center();
     await windowManager.setTitle("Dead Man's Enigma");
     await windowManager.setResizable(false);
