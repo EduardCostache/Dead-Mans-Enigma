@@ -1,35 +1,32 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:dead_mans_enigma/widgets/alert_widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:encrypt/encrypt.dart';
 
 class Enigma {
-  void encrypt(String text, String keyAsString, List<File> files) async {
+  void encrypt(String keyAsString, List<File> files) async {
+    final String encryptedPath = p.join(await _localPath, 'encrypted');
     final Key key = Key.fromUtf8(keyAsString.padRight(32, ' '));
-    const String tradeMark = '[ecrypted_DME]';
 
     try {
       for (File file in files) {
         final contents = await file.readAsLines();
         // getting the name of the file without the extension
-        final filename =
-            p.basename(file.path).split('.').first + ' ' + tradeMark + '.txt';
+        final filename = p.basename(file.path);
 
-        File encrypedFile = await File(p.join(await _localPath, filename))
-            .create(recursive: true);
+        File encrypedFile =
+            await File(p.join(encryptedPath, filename)).create(recursive: true);
 
         var sink = encrypedFile.openWrite();
 
         for (String line in contents) {
-          inspect(line);
           if (line == '') {
-            sink.write('\n');
+            sink.writeln();
           } else {
             var encryptedLine = _aesEncryption(line, key);
-            sink.write(encryptedLine + '\n');
+            sink.writeln(encryptedLine);
           }
         }
 
@@ -40,24 +37,52 @@ class Enigma {
       //somethibng
       inspect(e);
     }
+  }
 
-    //return encrypted.base64;
+  void decrypt(String keyAsString, List<File> files) async {
+    final String decryptedPath = p.join(await _localPath, 'decrypted');
+    final Key key = Key.fromUtf8(keyAsString.padRight(32, ' '));
+
+    try {
+      for (File file in files) {
+        final encryptedLines = await file.readAsLines();
+        // getting the name of the file without the extension
+        final filename = p.basename(file.path);
+
+        File decrypedFile =
+            await File(p.join(decryptedPath, filename)).create(recursive: true);
+
+        var sink = decrypedFile.openWrite();
+
+        for (String line in encryptedLines) {
+          if (line == '') {
+            sink.writeln();
+          } else {
+            var decryptedLine = _aesDecryption(line, key);
+            sink.writeln(decryptedLine);
+          }
+        }
+
+        await sink.flush();
+        await sink.close();
+      }
+    } catch (e) {
+      inspect(e);
+    }
   }
 
   String _aesEncryption(String line, Key key) {
-    final iv = IV.fromSecureRandom(16);
+    final iv = IV.fromLength(16);
     final encrypter = Encrypter(AES(key));
     final encrypted = encrypter.encrypt(line, iv: iv);
     return encrypted.base16;
   }
 
-  String decrypt(String text) {
-    final key = Key.fromSecureRandom(16);
-    final iv = IV.fromSecureRandom(16);
+  String _aesDecryption(String encryptedLine, Key key) {
+    final iv = IV.fromLength(16);
     final encrypter = Encrypter(AES(key));
-
-    final encrypted = encrypter.encrypt(text, iv: iv);
-    final decrypted = encrypter.decrypt(encrypted, iv: iv);
+    final decrypted =
+        encrypter.decrypt(Encrypted.fromBase16(encryptedLine), iv: iv);
 
     return decrypted;
   }
@@ -65,7 +90,7 @@ class Enigma {
   Future<String> get _localPath async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final encyptedFilesDirectory =
-        p.join(documentsDirectory.path, 'DME Encypted Files');
+        p.join(documentsDirectory.path, "Dead Man's Enigma Output");
 
     return encyptedFilesDirectory;
   }

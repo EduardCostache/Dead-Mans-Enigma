@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dead_mans_enigma/functions/encrypt_decrypt_functions.dart';
 import 'package:dead_mans_enigma/theme/button_style.dart';
 import 'package:dead_mans_enigma/widgets/alert_widgets.dart';
@@ -171,8 +169,7 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      //TODO: ENCRYPTION CODE GOES HERE
-                      Enigma().encrypt('text', 'keyAsString', _files!);
+                      Enigma().encrypt(key, _files!);
                     }
                   }
                 },
@@ -205,7 +202,7 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      //TODO: DECRYPTION CODE GOES HERE
+                      Enigma().decrypt(key, _files!);
                     }
                   }
                 },
