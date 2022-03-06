@@ -159,7 +159,7 @@ class _MainPageState extends State<MainPage> {
               width: _widgetWidth,
               child: Button(
                 style: MyButtonStyles.defaultStyle(),
-                onPressed: () {
+                onPressed: () async {
                   String key = _textController.text;
 
                   if (_files == null) {
@@ -169,7 +169,10 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      Enigma().encrypt(key, _files!);
+                      await Enigma().encrypt(key, _files!, context);
+
+                      // TODO: ADD LOADING BAR FOR ENCRYPTION
+
                     }
                   }
                 },
@@ -192,7 +195,7 @@ class _MainPageState extends State<MainPage> {
               width: _widgetWidth,
               child: Button(
                 style: MyButtonStyles.defaultStyle(),
-                onPressed: () {
+                onPressed: () async {
                   String key = _textController.text;
 
                   if (_files == null) {
@@ -202,7 +205,9 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      Enigma().decrypt(key, _files!);
+                      await Enigma().decrypt(key, _files!);
+                      // TODO: ADD LOADING BAR FOR ENCRYPTION
+
                     }
                   }
                 },
@@ -285,31 +290,4 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-  // Container _testEncryption() {
-  //   return Container(
-  //     alignment: Alignment.center,
-  //     padding: const EdgeInsets.only(top: 16.0),
-  //     child: Button(
-  //       style: MyButtonStyles.defaultStyle(),
-  //       child: Container(
-  //         width: _widgetWidth,
-  //         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
-  //         child: Text(
-  //           'Test Encryption',
-  //           style: TextStyle(
-  //             color: MyThemeColors.textTitle(),
-  //             fontSize: _buttonTextSize,
-  //           ),
-  //         ),
-  //       ),
-  //       onPressed: () {
-  //         String decryptedText = Encryption().encrypt(_textController.text);
-
-  //         setState(() {
-  //           _decryptedText = decryptedText;
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
 }

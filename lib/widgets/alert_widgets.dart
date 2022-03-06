@@ -23,4 +23,31 @@ class MyAlertWidgets {
       },
     );
   }
+
+  static showLoadingAlert(BuildContext context, String filename) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ContentDialog(
+          title: const Text('Progress'),
+          content: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ProgressBar(value: 50.0, strokeWidth: 8),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  'currently encrypting $filename...',
+                  style: const TextStyle(
+                      fontSize: 10.0, fontStyle: FontStyle.italic),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

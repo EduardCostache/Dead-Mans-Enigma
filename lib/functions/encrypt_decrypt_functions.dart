@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as e;
+import 'package:fluent_ui/fluent_ui.dart';
 
 class Enigma {
-  void encrypt(String keyAsString, List<File> files) async {
+  Future<void> encrypt(
+      String keyAsString, List<File> files, BuildContext context) async {
     final String encryptedPath = p.join(await _localPath, 'encrypted');
-    final Key key = Key.fromUtf8(keyAsString.padRight(32, ' '));
+    final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
 
     try {
       for (File file in files) {
@@ -39,9 +41,9 @@ class Enigma {
     }
   }
 
-  void decrypt(String keyAsString, List<File> files) async {
+  Future<void> decrypt(String keyAsString, List<File> files) async {
     final String decryptedPath = p.join(await _localPath, 'decrypted');
-    final Key key = Key.fromUtf8(keyAsString.padRight(32, ' '));
+    final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
 
     try {
       for (File file in files) {
@@ -71,18 +73,18 @@ class Enigma {
     }
   }
 
-  String _aesEncryption(String line, Key key) {
-    final iv = IV.fromLength(16);
-    final encrypter = Encrypter(AES(key));
+  String _aesEncryption(String line, e.Key key) {
+    final iv = e.IV.fromLength(16);
+    final encrypter = e.Encrypter(e.AES(key));
     final encrypted = encrypter.encrypt(line, iv: iv);
     return encrypted.base16;
   }
 
-  String _aesDecryption(String encryptedLine, Key key) {
-    final iv = IV.fromLength(16);
-    final encrypter = Encrypter(AES(key));
+  String _aesDecryption(String encryptedLine, e.Key key) {
+    final iv = e.IV.fromLength(16);
+    final encrypter = e.Encrypter(e.AES(key));
     final decrypted =
-        encrypter.decrypt(Encrypted.fromBase16(encryptedLine), iv: iv);
+        encrypter.decrypt(e.Encrypted.fromBase16(encryptedLine), iv: iv);
 
     return decrypted;
   }
