@@ -5,9 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/file_processing.dart';
 import '../theme/color_palette.dart';
 
 class MainPage extends StatefulWidget {
@@ -171,14 +169,17 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      await Enigma().encrypt(key, _files!, context);
-
-                      MyAlertWidgets.showLoadingAlert(
-                          context,
-                          Provider.of<FileProcessor>(context, listen: false)
-                              .filename,
-                          Provider.of<FileProcessor>(context, listen: false)
-                              .progress);
+                      MyAlertWidgets.showLoadingAlert(context, 0);
+                      Future.delayed(
+                        const Duration(seconds: 1),
+                        () async {
+                          await Enigma().encrypt(key, _files!, context);
+                          setState(() {
+                            _textController.clear();
+                            _files = null;
+                          });
+                        },
+                      );
                     }
                   }
                 },
@@ -211,9 +212,17 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      await Enigma().decrypt(key, _files!);
-                      // TODO: ADD LOADING BAR FOR ENCRYPTION
-
+                      MyAlertWidgets.showLoadingAlert(context, 1);
+                      Future.delayed(
+                        const Duration(seconds: 1),
+                        () async {
+                          await Enigma().decrypt(key, _files!, context);
+                          setState(() {
+                            _textController.clear();
+                            _files = null;
+                          });
+                        },
+                      );
                     }
                   }
                 },

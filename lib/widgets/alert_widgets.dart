@@ -1,4 +1,6 @@
+import 'package:dead_mans_enigma/providers/file_processing.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 
 import '../theme/button_style.dart';
 
@@ -24,8 +26,12 @@ class MyAlertWidgets {
     );
   }
 
-  static showLoadingAlert(
-      BuildContext context, String filename, double progress) {
+  static showLoadingAlert(BuildContext context, int mode) {
+    // mode == 0 {encrypting}
+    // mode == 1 {decrypting}
+    var fileProvider =
+        Provider.of<FileProgressProvider>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (context) {
@@ -35,32 +41,64 @@ class MyAlertWidgets {
             children: [
               SizedBox(
                 width: double.infinity,
-                child: ProgressBar(value: progress, strokeWidth: 8),
+                child: ValueListenableBuilder<double>(
+                  valueListenable: fileProvider.progress,
+                  builder: (context, value, child) {
+                    return ProgressBar(value: value, strokeWidth: 12);
+                  },
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  'currently encrypting $filename...',
-                  style: const TextStyle(
-                      fontSize: 10.0, fontStyle: FontStyle.italic),
+                padding: const EdgeInsets.only(top: 8.0),
+                child: ValueListenableBuilder<String>(
+                  valueListenable: fileProvider.filename,
+                  builder: (context, value, child) {
+                    var currentProgress = fileProvider.progress.value;
+                    var modeText = mode == 0 ? 'encrypting' : 'decrypting';
+
+                    if (currentProgress == 100.0) {
+                      return const Text(
+                        'All files completed...',
+                        style: TextStyle(
+                            fontSize: 12.0, fontStyle: FontStyle.italic),
+                      );
+                    } else {
+                      return Text(
+                        'currently $modeText $value...',
+                        style: const TextStyle(
+                            fontSize: 12.0, fontStyle: FontStyle.italic),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
           ),
           actions: [
-            Button(
-                style: MyButtonStyles.dialogNo(),
-                child: const Text('Cancel', style: TextStyle(fontSize: 16.0)),
-                onPressed: () {
-                  // TODO: ALLOW FOR THE CANCELATION OF ENCRYPTING FILES, REVERTING ALL ENCRYPTION
-                }),
-            Button(
-                // TODO: THE BUTTON SHOULD ONLY BE CLICKABLE WHEN ENCRYPTION IS FINISHED, THEN IT WILL POP THE CONTENT DIALOG AND CLEAR THE TEXT ON THE SCREEN ALONG WITH THE FILES
-                style: MyButtonStyles.dialogYes(),
-                child: const Text('Done', style: TextStyle(fontSize: 16.0)),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
+            const SizedBox(),
+            ValueListenableBuilder<double>(
+              valueListenable: fileProvider.progress,
+              builder: (context, value, child) {
+                var currentProgress = fileProvider.progress.value;
+
+                if (currentProgress == 100.0) {
+                  return Button(
+                    style: MyButtonStyles.dialogYes(),
+                    child: const Text('Done', style: TextStyle(fontSize: 16.0)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                } else {
+                  return Button(
+                    style: MyButtonStyles.dialogNo(),
+                    child:
+                        const Text('Wait...', style: TextStyle(fontSize: 16.0)),
+                    onPressed: () {},
+                  );
+                }
+              },
+            )
           ],
         );
       },

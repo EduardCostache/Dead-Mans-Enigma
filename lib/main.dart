@@ -17,8 +17,12 @@ void main() async {
     await windowManager.focus();
     await windowManager.show();
   });
-  runApp(ChangeNotifierProvider(
-      create: (_) => FileProcessor(), child: const DeadMansEnigma()));
+  runApp(
+    Provider(
+      create: (_) => FileProgressProvider(),
+      child: const DeadMansEnigma(),
+    ),
+  );
 }
 
 class DeadMansEnigma extends StatefulWidget {

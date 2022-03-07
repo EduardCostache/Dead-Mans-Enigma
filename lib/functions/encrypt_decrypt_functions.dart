@@ -16,14 +16,16 @@ class Enigma {
 
     final double _incrementProgressStep = 100 / files.length;
 
+    var fileProvider =
+        Provider.of<FileProgressProvider>(context, listen: false);
+
     try {
       for (File file in files) {
         final contents = await file.readAsLines();
         // getting the name of the file without the extension
         final filename = p.basename(file.path);
 
-        Provider.of<FileProcessor>(context, listen: false)
-            .updateFilename(filename);
+        fileProvider.updateFilename(filename);
 
         File encrypedFile =
             await File(p.join(encryptedPath, filename)).create(recursive: true);
@@ -39,8 +41,7 @@ class Enigma {
           }
         }
 
-        Provider.of<FileProcessor>(context, listen: false)
-            .incrementProgress(_incrementProgressStep);
+        fileProvider.updateProgress(_incrementProgressStep);
 
         await sink.flush();
         await sink.close();
@@ -51,15 +52,23 @@ class Enigma {
     }
   }
 
-  Future<void> decrypt(String keyAsString, List<File> files) async {
+  Future<void> decrypt(
+      String keyAsString, List<File> files, BuildContext context) async {
     final String decryptedPath = p.join(await _localPath, 'decrypted');
     final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
+
+    final double _incrementProgressStep = 100 / files.length;
+
+    var fileProvider =
+        Provider.of<FileProgressProvider>(context, listen: false);
 
     try {
       for (File file in files) {
         final encryptedLines = await file.readAsLines();
         // getting the name of the file without the extension
         final filename = p.basename(file.path);
+
+        fileProvider.updateFilename(filename);
 
         File decrypedFile =
             await File(p.join(decryptedPath, filename)).create(recursive: true);
@@ -74,6 +83,8 @@ class Enigma {
             sink.writeln(decryptedLine);
           }
         }
+
+        fileProvider.updateProgress(_incrementProgressStep);
 
         await sink.flush();
         await sink.close();
