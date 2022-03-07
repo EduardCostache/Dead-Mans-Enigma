@@ -58,7 +58,7 @@ class MyAlertWidgets {
 
                     if (currentProgress == 100.0) {
                       return const Text(
-                        "All files completed... \n Files saved in Documents/Dead Man's Enigma Output/",
+                        "All files completed... \nFiles saved in Documents/Dead Man's Enigma Output/",
                         style: TextStyle(
                             fontSize: 16.0, fontStyle: FontStyle.italic),
                       );
@@ -87,6 +87,7 @@ class MyAlertWidgets {
                     child: const Text('Done', style: TextStyle(fontSize: 16.0)),
                     onPressed: () {
                       Navigator.pop(context);
+                      fileProvider.reset();
                     },
                   );
                 } else {

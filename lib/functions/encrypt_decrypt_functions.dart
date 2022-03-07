@@ -14,7 +14,7 @@ class Enigma {
     final String encryptedPath = p.join(await _localPath, 'encrypted');
     final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
 
-    final double _incrementProgressStep = 100 / files.length;
+    final double _incrementProgressStep = 100.0 / files.length;
 
     var fileProvider =
         Provider.of<FileProgressProvider>(context, listen: false);
@@ -57,7 +57,7 @@ class Enigma {
     final String decryptedPath = p.join(await _localPath, 'decrypted');
     final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
 
-    final double _incrementProgressStep = 100 / files.length;
+    final double _incrementProgressStep = 100.0 / files.length;
 
     var fileProvider =
         Provider.of<FileProgressProvider>(context, listen: false);
