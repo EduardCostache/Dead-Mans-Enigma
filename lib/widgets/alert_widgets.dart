@@ -58,9 +58,9 @@ class MyAlertWidgets {
 
                     if (currentProgress == 100.0) {
                       return const Text(
-                        'All files completed...',
+                        "All files completed... \n Files saved in Documents/Dead Man's Enigma Output/",
                         style: TextStyle(
-                            fontSize: 12.0, fontStyle: FontStyle.italic),
+                            fontSize: 16.0, fontStyle: FontStyle.italic),
                       );
                     } else {
                       return Text(
