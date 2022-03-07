@@ -5,7 +5,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/file_processing.dart';
 import '../theme/color_palette.dart';
 
 class MainPage extends StatefulWidget {
@@ -171,8 +173,12 @@ class _MainPageState extends State<MainPage> {
                     if (!_validateKeyError(key)) {
                       await Enigma().encrypt(key, _files!, context);
 
-                      // TODO: ADD LOADING BAR FOR ENCRYPTION
-
+                      MyAlertWidgets.showLoadingAlert(
+                          context,
+                          Provider.of<FileProcessor>(context, listen: false)
+                              .filename,
+                          Provider.of<FileProcessor>(context, listen: false)
+                              .progress);
                     }
                   }
                 },

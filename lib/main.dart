@@ -1,5 +1,7 @@
 import 'package:dead_mans_enigma/pages/main_page.dart';
+import 'package:dead_mans_enigma/providers/file_processing.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -15,7 +17,8 @@ void main() async {
     await windowManager.focus();
     await windowManager.show();
   });
-  runApp(const DeadMansEnigma());
+  runApp(ChangeNotifierProvider(
+      create: (_) => FileProcessor(), child: const DeadMansEnigma()));
 }
 
 class DeadMansEnigma extends StatefulWidget {

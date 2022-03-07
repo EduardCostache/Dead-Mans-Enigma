@@ -24,7 +24,8 @@ class MyAlertWidgets {
     );
   }
 
-  static showLoadingAlert(BuildContext context, String filename) {
+  static showLoadingAlert(
+      BuildContext context, String filename, double progress) {
     showDialog(
       context: context,
       builder: (context) {
@@ -34,7 +35,7 @@ class MyAlertWidgets {
             children: [
               SizedBox(
                 width: double.infinity,
-                child: ProgressBar(value: 50.0, strokeWidth: 8),
+                child: ProgressBar(value: progress, strokeWidth: 8),
               ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
@@ -46,6 +47,21 @@ class MyAlertWidgets {
               ),
             ],
           ),
+          actions: [
+            Button(
+                style: MyButtonStyles.dialogNo(),
+                child: const Text('Cancel', style: TextStyle(fontSize: 16.0)),
+                onPressed: () {
+                  // TODO: ALLOW FOR THE CANCELATION OF ENCRYPTING FILES, REVERTING ALL ENCRYPTION
+                }),
+            Button(
+                // TODO: THE BUTTON SHOULD ONLY BE CLICKABLE WHEN ENCRYPTION IS FINISHED, THEN IT WILL POP THE CONTENT DIALOG AND CLEAR THE TEXT ON THE SCREEN ALONG WITH THE FILES
+                style: MyButtonStyles.dialogYes(),
+                child: const Text('Done', style: TextStyle(fontSize: 16.0)),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          ],
         );
       },
     );
