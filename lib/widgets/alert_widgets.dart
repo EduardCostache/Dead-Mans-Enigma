@@ -26,9 +26,9 @@ class MyAlertWidgets {
     );
   }
 
-  static showLoadingAlert(BuildContext context, int mode) {
-    // mode == 0 {encrypting}
-    // mode == 1 {decrypting}
+  static showLoadingAlert(BuildContext context, bool mode) {
+    // mode == false : encrypting
+    // mode == true : decrypting
     var fileProvider =
         Provider.of<FileProgressProvider>(context, listen: false);
 
@@ -54,7 +54,7 @@ class MyAlertWidgets {
                   valueListenable: fileProvider.filename,
                   builder: (context, value, child) {
                     var currentProgress = fileProvider.progress.value;
-                    var modeText = mode == 0 ? 'encrypting' : 'decrypting';
+                    var modeText = mode ? 'decrypting' : 'encrypting';
 
                     if (currentProgress == 100.0) {
                       return const Text(
@@ -87,7 +87,6 @@ class MyAlertWidgets {
                     child: const Text('Done', style: TextStyle(fontSize: 16.0)),
                     onPressed: () {
                       Navigator.pop(context);
-                      fileProvider.reset();
                     },
                   );
                 } else {

@@ -5,7 +5,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/file_processing.dart';
 import '../theme/color_palette.dart';
 
 class MainPage extends StatefulWidget {
@@ -148,6 +150,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   Padding _footer() {
+    var fileProvider =
+        Provider.of<FileProgressProvider>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -169,11 +174,12 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      MyAlertWidgets.showLoadingAlert(context, 0);
+                      fileProvider.reset();
+                      MyAlertWidgets.showLoadingAlert(context, false);
                       Future.delayed(
                         const Duration(seconds: 1),
                         () async {
-                          await Enigma().encrypt(key, _files!, context);
+                          await Enigma().enigma(key, _files!, context, false);
                           setState(() {
                             _textController.clear();
                             _files = null;
@@ -212,11 +218,12 @@ class _MainPageState extends State<MainPage> {
                         'You must select at least 1 file!');
                   } else {
                     if (!_validateKeyError(key)) {
-                      MyAlertWidgets.showLoadingAlert(context, 1);
+                      fileProvider.reset();
+                      MyAlertWidgets.showLoadingAlert(context, true);
                       Future.delayed(
                         const Duration(seconds: 1),
                         () async {
-                          await Enigma().decrypt(key, _files!, context);
+                          await Enigma().enigma(key, _files!, context, true);
                           setState(() {
                             _textController.clear();
                             _files = null;
