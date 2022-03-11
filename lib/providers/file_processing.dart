@@ -1,19 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class FileProgressProvider {
-  ValueNotifier<String> filename = ValueNotifier('');
-  ValueNotifier<double> progress = ValueNotifier(0.0);
+class FileProgressProvider extends ChangeNotifier {
+  String filename = '';
+  double progress = 0;
 
   void updateProgress(double incrementStep) {
-    progress.value += incrementStep;
+    progress += incrementStep;
+    notifyListeners();
   }
 
   void updateFilename(String newFilename) {
-    filename.value = newFilename;
+    filename = newFilename;
+    notifyListeners();
   }
 
   void reset() {
-    filename.value = '';
-    progress.value = 0.0;
+    filename = '';
+    progress = 0;
+    notifyListeners();
   }
 }

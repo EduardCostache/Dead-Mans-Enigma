@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'package:dead_mans_enigma/providers/file_processing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -18,7 +19,7 @@ class Enigma {
         : p.join(await _localPath, 'encrypted');
     final e.Key key = e.Key.fromUtf8(keyAsString.padRight(32, ' '));
 
-    final double _incrementProgressStep = 100.0 / files.length;
+    final double _incrementProgressStep = roundDouble(100.0 / files.length, 2);
 
     var fileProvider =
         Provider.of<FileProgressProvider>(context, listen: false);
@@ -71,6 +72,11 @@ class Enigma {
         encrypter.decrypt(e.Encrypted.fromBase16(encryptedLine), iv: iv);
 
     return decrypted;
+  }
+
+  double roundDouble(double value, int places) {
+    var mod = pow(10, places);
+    return ((value * mod).round().toDouble() / mod);
   }
 
   Future<String> get _localPath async {

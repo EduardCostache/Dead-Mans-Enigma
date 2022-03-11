@@ -29,77 +29,84 @@ class MyAlertWidgets {
   static showLoadingAlert(BuildContext context, bool mode) {
     // mode == false : encrypting
     // mode == true : decrypting
-    var fileProvider =
-        Provider.of<FileProgressProvider>(context, listen: false);
 
     showDialog(
       context: context,
       builder: (context) {
-        return ContentDialog(
-          title: const Text('Progress'),
-          content: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: ValueListenableBuilder<double>(
-                  valueListenable: fileProvider.progress,
-                  builder: (context, value, child) {
-                    return ProgressBar(value: value, strokeWidth: 12);
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: ValueListenableBuilder<String>(
-                  valueListenable: fileProvider.filename,
-                  builder: (context, value, child) {
-                    var currentProgress = fileProvider.progress.value;
-                    var modeText = mode ? 'decrypting' : 'encrypting';
+        return Consumer<FileProgressProvider>(
+          builder: (context, value, child) {
+            var progress = value.progress;
+            var filename = value.filename;
+            var modeText = mode ? 'decrypting' : 'encrypting';
 
-                    if (currentProgress == 100.0) {
-                      return const Text(
+            if (progress < 100.0) {
+              return ContentDialog(
+                title: const Text('Progress'),
+                content: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Consumer<FileProgressProvider>(
+                        builder: (context, value, child) {
+                          return ProgressBar(value: progress, strokeWidth: 12);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'currently $modeText $filename...',
+                        style: const TextStyle(
+                            fontSize: 12.0, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  Button(
+                    style: MyButtonStyles.dialogNo(),
+                    child:
+                        const Text('Wait...', style: TextStyle(fontSize: 16.0)),
+                    onPressed: () {},
+                  )
+                ],
+              );
+            } else {
+              return ContentDialog(
+                title: const Text('Progress'),
+                content: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Consumer<FileProgressProvider>(
+                        builder: (context, value, child) {
+                          return const ProgressBar(
+                              value: 100.0, strokeWidth: 12);
+                        },
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
                         "All files completed... \nFiles saved in Documents/Dead Man's Enigma Output/",
                         style: TextStyle(
                             fontSize: 16.0, fontStyle: FontStyle.italic),
-                      );
-                    } else {
-                      return Text(
-                        'currently $modeText $value...',
-                        style: const TextStyle(
-                            fontSize: 12.0, fontStyle: FontStyle.italic),
-                      );
-                    }
-                  },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          actions: [
-            const SizedBox(),
-            ValueListenableBuilder<double>(
-              valueListenable: fileProvider.progress,
-              builder: (context, value, child) {
-                var currentProgress = fileProvider.progress.value;
-
-                if (currentProgress == 100.0) {
-                  return Button(
+                actions: [
+                  Button(
                     style: MyButtonStyles.dialogYes(),
                     child: const Text('Done', style: TextStyle(fontSize: 16.0)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                  );
-                } else {
-                  return Button(
-                    style: MyButtonStyles.dialogNo(),
-                    child:
-                        const Text('Wait...', style: TextStyle(fontSize: 16.0)),
-                    onPressed: () {},
-                  );
-                }
-              },
-            )
-          ],
+                  )
+                ],
+              );
+            }
+          },
         );
       },
     );

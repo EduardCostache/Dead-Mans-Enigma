@@ -18,10 +18,7 @@ void main() async {
     await windowManager.show();
   });
   runApp(
-    Provider(
-      create: (_) => FileProgressProvider(),
-      child: const DeadMansEnigma(),
-    ),
+    const DeadMansEnigma(),
   );
 }
 
@@ -35,9 +32,12 @@ class DeadMansEnigma extends StatefulWidget {
 class _DeadMansEnigmaState extends State<DeadMansEnigma> {
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
-      theme: ThemeData(fontFamily: 'Roboto'),
-      home: const MainPage(),
+    return ChangeNotifierProvider(
+      create: (context) => FileProgressProvider(),
+      child: FluentApp(
+        theme: ThemeData(fontFamily: 'Roboto'),
+        home: const MainPage(),
+      ),
     );
   }
 }
